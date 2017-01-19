@@ -15,7 +15,9 @@ module.exports = function(grunt) {
     jshint: {
       all: [
         'Gruntfile.js',
+        'lib/*.js',
         'tasks/*.js',
+        'test/*.js',
         '<%= nodeunit.tests %>'
       ],
       options: {
@@ -32,18 +34,18 @@ module.exports = function(grunt) {
     check_utf8: {
       default_options: {
         options: {
+           BOM: 'none'
         },
         files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123']
+          'test/default_options': ['test/fixtures/ansi.txt', 'test/fixtures/unicode.txt', 'test/fixtures/utf8.txt']
         }
       },
       custom_options: {
         options: {
-          separator: ': ',
-          punctuation: ' !!!'
+          BOM: 'required'
         },
         files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123']
+          'test/custom_options': ['test/fixtures/ansi.txt', 'test/fixtures/unicode.txt', 'test/fixtures/utf8.txt']
         }
       }
     },
@@ -65,7 +67,8 @@ module.exports = function(grunt) {
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'check_utf8', 'nodeunit']);
+  // grunt.registerTask('test', ['clean', 'check_utf8', 'nodeunit']);
+  grunt.registerTask('test', ['clean', 'nodeunit']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);

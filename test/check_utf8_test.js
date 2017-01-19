@@ -1,6 +1,15 @@
 'use strict';
 
+   /**
+    * @module : Simpler test functions with NodeUnit
+    * @author Jonathan Rowell
+    * @date 19 January 2017
+    * Copyright (c) 2017 Jonathan Rowell
+    * Licensed under the MIT license.
+*/ 
+
 var grunt = require('grunt');
+var checker = require('../lib/check_utf8');
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -24,24 +33,66 @@ var grunt = require('grunt');
 
 exports.check_utf8 = {
   setUp: function(done) {
-    // setup here if necessary
-    done();
+   // setup here if necessary
+   grunt.verbose.write('setup called');
+   done();
   },
   default_options: function(test) {
-    test.expect(1);
 
-    var actual = grunt.file.read('tmp/default_options');
-    var expected = grunt.file.read('test/expected/default_options');
-    test.equal(actual, expected, 'should describe what the default behavior is.');
+   var actual,expected;
 
-    test.done();
-  },
-  custom_options: function(test) {
-    test.expect(1);
+   test.expect(6);
 
-    var actual = grunt.file.read('tmp/custom_options');
-    var expected = grunt.file.read('test/expected/custom_options');
-    test.equal(actual, expected, 'should describe what the custom option(s) behavior is.');
+   /* BOM required test */
+	
+   actual = checker.checkutf8('test/fixtures/ansi.txt',{BOM: 'required'},grunt);
+   expected = 'Source file "test/fixtures/ansi.txt" has no BOM.';
+   test.equal(actual, expected, 'ansi has no BOM');
+
+   actual = checker.checkutf8('test/fixtures/unicode.txt',{BOM: 'required'},grunt);
+   expected = 'Source file "test/fixtures/unicode.txt" has no BOM.';
+   test.equal(actual, expected, 'unicode has no BOM');
+
+   actual = checker.checkutf8('test/fixtures/utf8.txt',{BOM: 'required'},grunt);
+   expected = '';
+   test.equal(actual, expected, 'utf8 has no BOM');
+
+   /* BOM not required test */
+
+   actual = checker.checkutf8('test/fixtures/ansi.txt',{BOM: 'none'},grunt);
+   expected = 'Source file "test/fixtures/ansi.txt" illegal encoding at 63 char=eb';
+   test.equal(actual, expected, 'No BOM test ansi file');
+
+   actual = checker.checkutf8('test/fixtures/unicode.txt',{BOM: 'none'},grunt);
+   expected = 'Source file "test/fixtures/unicode.txt" illegal encoding at 0 char=ff';
+   test.equal(actual, expected, 'No BOM test unicode file');
+
+   actual = checker.checkutf8('test/fixtures/utf8.txt',{BOM: 'none'},grunt);
+   expected = 'Source file "test/fixtures/utf8.txt" has a BOM.';
+   test.equal(actual, expected, 'No BOM test utf8 file with BOM');
+
+   test.done();
+	},
+
+   custom_options: function(test) {
+
+   var actual,expected;
+
+   /* Encoding check */
+   test.expect(3);
+
+   actual = checker.checkutf8('test/fixtures/ansi.txt',{BOM: 'ignore'},grunt);
+   expected = 'Source file "test/fixtures/ansi.txt" illegal encoding at 63 char=eb';
+   test.equal(actual, expected, 'ansi not utf8 test');
+
+   actual = checker.checkutf8('test/fixtures/unicode.txt',{BOM: 'ignore'},grunt);
+   expected = 'Source file "test/fixtures/unicode.txt" illegal encoding at 0 char=ff';
+   test.equal(actual, expected, 'unicode has no BOM');
+
+   actual = checker.checkutf8('test/fixtures/utf8.txt',{BOM: 'ignore'},grunt);
+   expected = '';
+   test.equal(actual, expected, 'utf8 encoded OK');
+
 
     test.done();
   },
