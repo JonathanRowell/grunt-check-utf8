@@ -1,6 +1,9 @@
 # grunt-check-utf8
 
-> Check UTF* encodings
+> Check UTF8 encodings
+
+Check files for being in UTF8 to avoid decoding exceptions, also to check whether a Byte Order Marker (BOM) is present or absent.
+Many systems require files in UTF8 without a BOM; Windows 10 now requires them with.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.5`
@@ -27,60 +30,42 @@ grunt.initConfig({
   check_utf8: {
     options: {
       // Task-specific options go here.
+		BOM: "none"
     },
-    your_target: {
-      // Target-specific file lists and/or options go here.
-    },
+    files: [
+      // Target-specific file lists go in here.
+    ]
   },
+  ...
 });
 ```
 
 ### Options
 
-#### options.separator
+#### options.BOM
 Type: `String`
-Default value: `',  '`
+Default value: `'none'`
 
-A string value that is used to do something with whatever.
+Possible values are "required" checks that a BOM is present; "ignore" ignores a correct UTF8 BOM if present, and "none" there should be no BOM present.
 
-#### options.punctuation
-Type: `String`
-Default value: `'.'`
-
-A string value that is used to do something else with whatever else.
 
 ### Usage Examples
 
 #### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+The default is BOM: "none"
 
 ```js
 grunt.initConfig({
   check_utf8: {
     options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
+    files: 
+      ['src/testing', 'src/123'],
     },
   },
+  ...
 });
 ```
 
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
-
-```js
-grunt.initConfig({
-  check_utf8: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-});
-```
 
 ## Contributing
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).

@@ -70,7 +70,7 @@ exports.check_utf8 = {
    actual = checker.checkutf8('test/fixtures/utf8.txt',{BOM: 'none'},grunt);
    expected = 'Source file "test/fixtures/utf8.txt" has a BOM.';
    test.equal(actual, expected, 'No BOM test utf8 file with BOM');
-
+	
    test.done();
 	},
 
