@@ -6,7 +6,7 @@
     * @date 19 January 2017
     * Copyright (c) 2017 Jonathan Rowell
     * Licensed under the MIT license.
-*/ 
+*/
 
 var grunt = require('grunt');
 var checker = require('../lib/check_utf8');
@@ -37,14 +37,14 @@ exports.check_utf8 = {
    grunt.verbose.write('setup called');
    done();
   },
-  default_options: function(test) {
+  BOM_TESTS: function(test) {
 
    var actual,expected;
 
    test.expect(6);
 
    /* BOM required test */
-	
+
    actual = checker.checkutf8('test/fixtures/ansi.txt',{BOM: 'required'},grunt);
    expected = 'Source file "test/fixtures/ansi.txt" has no BOM.';
    test.equal(actual, expected, 'ansi has no BOM');
@@ -74,7 +74,7 @@ exports.check_utf8 = {
    test.done();
 	},
 
-   custom_options: function(test) {
+   ENCODING_TESTS: function(test) {
 
    var actual,expected;
 
