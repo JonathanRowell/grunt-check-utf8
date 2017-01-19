@@ -23,7 +23,7 @@ module.exports = function(grunt) {
     grunt.verbose.write('options.BOM='+options.BOM);
     var errors = 0;
     var warnings = 0;
-	 var filesDone = 0;
+    var filesDone = 0;
 
     // Iterate over all specified file groups.
     this.files.forEach(function(f) {
@@ -35,7 +35,7 @@ module.exports = function(grunt) {
           warnings++;
           return false;
         } else {
-			  filesDone++;
+           filesDone++;
            var mess = checker.checkutf8(filepath,options,grunt);
            if(mess.length!==0) {
               grunt.fail.warn(mess);
